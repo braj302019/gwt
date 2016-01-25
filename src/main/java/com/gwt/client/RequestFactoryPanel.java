@@ -162,15 +162,11 @@ public class RequestFactoryPanel extends Composite
 
     private void log(String msg)
     {
-        consoleLog(msg);
+        ClientUtils.consoleLog(msg);
         Element log = DOM.createDiv();
         log.setInnerHTML(msg);
         logging.getElement().appendChild(log);
     }
-
-    public static native void consoleLog(String msg) /*-{
-		console.log(msg);
-    }-*/;
 
     class VoidReceiver extends Receiver<Void>
     {
