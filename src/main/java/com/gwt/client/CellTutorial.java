@@ -18,13 +18,20 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.cellview.client.CellWidget;
+import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
+import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.ui.CaptionPanel;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.AbstractDataProvider;
+import com.google.gwt.view.client.MultiSelectionModel;
+import com.google.gwt.view.client.SelectionChangeEvent;
 
 public class CellTutorial extends Composite
 {
@@ -41,6 +48,7 @@ public class CellTutorial extends Composite
         panel.add(createDisplayCells(), "Display Cells");
         panel.add(createEditableCells(), "Editable Cells");
         panel.add(createCellList(), "Cell List");
+        panel.add(createCellTree(), "Cell Tree");
         return panel;
     }
 
@@ -106,14 +114,43 @@ public class CellTutorial extends Composite
         CellList<ContactProxy> list = new CellList<ContactProxy>(new ContactCell());
         list.setPageSize(5);
         
+        list.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+        list.setKeyboardPagingPolicy(KeyboardPagingPolicy.CHANGE_PAGE);
+
+        final MultiSelectionModel<ContactProxy> selectionModel = new MultiSelectionModel<ContactProxy>();
+        list.setSelectionModel(selectionModel);
+        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler()
+            {
+                
+                @Override
+                public void onSelectionChange(SelectionChangeEvent event)
+                {
+                    ClientUtils.consoleLog("Contact selected :" + selectionModel.getSelectedSet().size());
+                }
+            });
+
         AbstractDataProvider<ContactProxy> provider = new ContactProvider();
         provider.addDataDisplay(list);
-        
+
         SimplePager pager = new SimplePager();
         pager.setDisplay(list);
 
         panel.add(list);
         panel.add(pager);
+        panel.add(new Label("Note : Go to Request Factory to create the contacts"));
+        return panel;
+    }
+    
+    private VerticalPanel createCellTree()
+    {
+        VerticalPanel panel = new VerticalPanel();
+        panel.setWidth("100%");
+        
+        CellTree tree = new CellTree(new MyTreeViewModel(), null);
+        ScrollPanel scroller = new ScrollPanel();
+        scroller.setHeight("400px");
+        scroller.add(tree);
+        panel.add(scroller);
         return panel;
     }
 }

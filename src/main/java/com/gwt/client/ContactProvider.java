@@ -24,6 +24,7 @@ public class ContactProvider extends AsyncDataProvider<ContactProxy>
     @Override
     protected void onRangeChanged(final HasData<ContactProxy> display)
     {
+        final Range range = display.getVisibleRange();
         ContactRequest context = factory.createContactRequest();
 
         context.findAllContacts().fire(new Receiver<List<ContactProxy>>()
@@ -34,9 +35,17 @@ public class ContactProvider extends AsyncDataProvider<ContactProxy>
                 {
                     if (response.size() > 0)
                     {
-                        display.setRowCount(response.size());
-                        Range range = display.getVisibleRange();
-                        updateRowData(range.getStart(), response.subList(range.getStart(), range.getStart() + range.getLength()));
+                        int total = response.size();
+                        int length = range.getLength();
+                        int start = range.getStart();
+                        int end = start + length;
+                        if(end > total)
+                        {
+                            end = total;
+                        }
+                        
+                        display.setRowCount(total);
+                        display.setRowData(start, response.subList(start, end));
                     }
                 }
             });

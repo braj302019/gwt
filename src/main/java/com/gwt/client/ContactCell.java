@@ -15,8 +15,8 @@ public class ContactCell extends AbstractCell<ContactProxy>
     
     interface Template extends SafeHtmlTemplates
     {
-        @Template("<div><div>{0} # {1}</div><div>{2}</div></div>")
-        SafeHtml contact(Long id, String email, String notes);
+        @Template("<div style=\"border-left : 10px solid {3}; border-bottom : 1px solid #C2C2C2\"><div>{0} # {1}</div><div>{2}</div></div>")
+        SafeHtml contact(Long id, String email, String notes, String color);
     }
     
     
@@ -28,7 +28,7 @@ public class ContactCell extends AbstractCell<ContactProxy>
             return;
         }
         
-        sb.append(template.contact(contact.getId(), contact.getEmail(), contact.getNotes()));
+        sb.append(template.contact(contact.getId(), contact.getEmail(), contact.getNotes(), ClientUtils.randomColor()));
     }
 
 }
