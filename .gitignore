@@ -1,4 +1,6 @@
 /target/
+/.settings/
+/.classpath
 /.apt_generated/
 /src/main/gwt-unitCache/
 /src/main/webapp/WEB-INF/classes
