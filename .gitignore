@@ -1,4 +1,5 @@
+/bin/
 /target/
 /.apt_generated/
-/src/main/gwt-unitCache/
-/src/main/webapp/WEB-INF/classes
+**/gwt-unitCache/
+**/classes
